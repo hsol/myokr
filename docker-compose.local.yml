@@ -1,0 +1,17 @@
+version: '3'
+services:
+  pynecone:
+    image: myokr.local:latest
+    build:
+      context: ./
+      dockerfile: local.Dockerfile
+    container_name: myokr.local
+    restart: always
+    ports:
+      - "3000:80"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
