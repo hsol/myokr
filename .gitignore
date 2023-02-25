@@ -1,1 +1,4 @@
-.idea.web.envpynecone.db
+.idea
+.web
+.env
+pynecone.db
