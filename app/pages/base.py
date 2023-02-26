@@ -3,6 +3,8 @@ from pynecone.event import EventHandler
 
 
 class BasePage:
+    route: str | None = None
+
     def get_component(self) -> pynecone.Component:
         raise NotImplementedError
 

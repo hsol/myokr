@@ -8,12 +8,26 @@ class Global:
 
     class FontFamily:
         DEFAULT = "'Noto Sans KR', sans-serif;"
-        LOGO = "'Overlock', cursive"
+        LOGO = "'Tilt Neon', cursive"
+
+    class Palette:
+        WHITE = "#FFFFFF"
+        CINDER = "#030305"
+        BIRCH = "#F2F4EF"
+        RONCHI = "#EFB730"
+        CLEARDAY = "#CEE3F4"
+        VERMILLON = "#C94F44"
+        RAISIN = "#261326"
+        MANTIS = "#ABBF4E"
 
     STYLE_SHEETS = [
+        "/base.css",
         "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400&display=swap",
-        "https://fonts.googleapis.com/css2?family=Overlock:ital,wght@1,900&display=swap",
+        "https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap",
     ]
     STYLE = {
         "font_family": FontFamily.DEFAULT,
+        "background_color": Palette.BIRCH,
+        "color": Palette.CINDER,
+        "box_sizing": "border-box",
     }

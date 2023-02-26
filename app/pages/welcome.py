@@ -1,29 +1,29 @@
 import pynecone
 
 from app import Global
+from app.components.container import Container
+from app.components.logo import Logo
 from app.pages.base import BasePage
 
 
 class Welcome(BasePage):
+    route = "/welcome"
+
     def get_component(self) -> pynecone.Component:
-        return pynecone.container(
+        return Container.with_cta(
             pynecone.vstack(
-                pynecone.text("내 목표를 향해서"),
-                pynecone.heading(
-                    "my-o.kr",
-                    size="4xl",
-                    font_family=Global.FontFamily.LOGO,
+                Logo.inline,
+                *([pynecone.spacer()] * 3),
+                pynecone.markdown(
+                    "OKR(Objectives and key results)은 **목표**와 결과를 **정의**하고 **추적**하기 위한 목표설정 모델입니다."
                 ),
-                height="30vh",
-                display="flex",
-                flex_flow="column",
-                align_items="center",
-                justify_content="center",
+                pynecone.spacer(),
+                pynecone.markdown(
+                    "여러분의 **목표**에도 OKR 모델을 적용하여 내가 스스로 얼마나 잘 해내고 있는지 진척도를 체크해보세요!"
+                ),
+                align_items="flex-start",
             ),
-            center_content=True,
             display="flex",
             flex_flow="column",
-            align_items="center",
             justify_content="center",
-            height="100vh",
         )

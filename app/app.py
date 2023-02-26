@@ -1,12 +1,23 @@
 import pynecone
 from app import Global
-from app.pages import get_route_pages, BasePage
+from app.pages.base import BasePage
+from app.pages.index import Index
+from app.pages.welcome import Welcome
 
 app = pynecone.App(
     state=Global.State,
     stylesheets=Global.STYLE_SHEETS,
     style=Global.STYLE,
 )
+
+
+def get_route_pages() -> list[str, type[BasePage]]:
+    pages = [Index, Welcome]
+    return {
+        page.route: page
+        for page in pages
+    }.items()
+
 for route, page in get_route_pages():
     instance: BasePage = page()
     app.add_page(

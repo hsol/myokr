@@ -1,0 +1,9 @@
+html, body, [data-reactroot] {
+    height: 100vh;
+}
+[data-reactroot] {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+}
