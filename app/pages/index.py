@@ -7,11 +7,6 @@ from app.pages.base import BasePage
 
 
 class IndexState(Global.State):
-    def on_load(self):
-        from app.pages.welcome import Welcome
-
-        return pynecone.redirect(Welcome.route)
-
     def redirect(self):
         from app.pages.welcome import Welcome
 
@@ -42,6 +37,3 @@ class Index(BasePage):
             ),
             height="100vh",
         )
-
-    def get_on_load_event_handler(self) -> callable:
-        return IndexState.on_load

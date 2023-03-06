@@ -1,8 +1,11 @@
+import importlib
+import inspect
+import pkgutil
+
 import pynecone
 from app import Global
 from app.pages.base import BasePage
-from app.pages.index import Index
-from app.pages.welcome import Welcome
+from app import pages
 
 app = pynecone.App(
     state=Global.State,
@@ -12,11 +15,8 @@ app = pynecone.App(
 
 
 def get_route_pages() -> list[str, type[BasePage]]:
-    pages = [Index, Welcome]
-    return {
-        page.route: page
-        for page in pages
-    }.items()
+    return {page.route: page for page in pages.__all__}.items()
+
 
 for route, page in get_route_pages():
     instance: BasePage = page()

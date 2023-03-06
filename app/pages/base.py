@@ -1,5 +1,6 @@
+import typing
+
 import pynecone
-from pynecone.event import EventHandler
 
 
 class BasePage:
@@ -11,5 +12,5 @@ class BasePage:
     def get_add_page_options(self) -> dict:
         return {}
 
-    def get_on_load_event_handler(self) -> EventHandler | None:
+    def get_on_load_event_handler(self) -> typing.Callable[[], None] | None:
         return None

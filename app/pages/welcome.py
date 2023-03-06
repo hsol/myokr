@@ -6,6 +6,13 @@ from app.components.logo import Logo
 from app.pages.base import BasePage
 
 
+class WelcomeState(Global.State):
+    def next(self):
+        from app.pages.welcome_objective import WelcomeObjective
+
+        return pynecone.redirect(WelcomeObjective.route)
+
+
 class Welcome(BasePage):
     route = "/welcome"
 
@@ -26,4 +33,5 @@ class Welcome(BasePage):
             display="flex",
             flex_flow="column",
             justify_content="center",
+            cta_right=pynecone.button("다음", width="100%", on_click=WelcomeState.next),
         )

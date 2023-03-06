@@ -1,5 +1,7 @@
 import pynecone
 
+from app.okr_gpt import OKRChatGPT
+
 
 class Global:
     class State(pynecone.State):
@@ -27,7 +29,7 @@ class Global:
     ]
     STYLE = {
         "font_family": FontFamily.DEFAULT,
-        "background_color": Palette.BIRCH,
         "color": Palette.CINDER,
         "box_sizing": "border-box",
     }
+    GPT = OKRChatGPT()

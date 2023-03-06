@@ -9,15 +9,14 @@ class Container:
         pynecone.container,
         width="100%",
         padding="0 32px 0 32px",
-        height="100%",
     )
 
     @classmethod
     def with_cta(
         cls,
         *inner_components,
-        cta_left: Component = pynecone.box(),
-        cta_right: Component = pynecone.box(),
+        cta_left: Component = "",
+        cta_right: Component = "",
         **component_options,
     ):
         return pynecone.box(
@@ -27,14 +26,17 @@ class Container:
                 **component_options,
             ),
             Container.wrapper(
-                pynecone.hstack(
+                pynecone.button_group(
                     cta_left,
                     cta_right,
-                    height="100%",
+                    width="100%",
+                    spacing=2,
                 ),
-                height="auto",
-                padding="1em 1em 1em 1em",
+                height="80px",
+                display="flex",
+                align_items="center",
             ),
+            width="100%",
             height="100%",
             max_height="800px",
         )
