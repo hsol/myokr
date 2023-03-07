@@ -12,22 +12,26 @@ from app import Global
 from app.components.container import Container
 from app.okr_gpt import KeyResultProvideFailedError
 from app.pages.base import BasePage
-from app.states.okr import OKRState
+from app.states.okr import OKRState, TooManyKeyResultsError
 
 
 class WelcomeKeyResultsState(OKRState):
     def on_load(self):
+        self.error_message = ""
         if self.objective:
-            self.error_message = ""
             try:
                 key_result_strings = Global.GPT.get_key_results(self.objective)
             except KeyResultProvideFailedError as e:
                 self.error_message = str(e)
                 return
 
-            self.set_key_results(key_result_strings)
+            for idx, key_result in enumerate(key_result_strings[:5]):
+                setattr(self, f"kr{(idx + 1)}", key_result)
         else:
             self.error_message = "목표가 설정되지 않았어요. 이전으로 돌아가서 다시 목표를 입력해주세요!"
+
+    def set_key_results(self, key_results: list[str]):
+        super().set_key_results(key_results)
 
     def prev(self):
         from app.pages.welcome_objective import WelcomeObjective
@@ -52,14 +56,12 @@ class WelcomeKeyResults(BasePage):
         return WelcomeKeyResultsState.on_load
 
     def get_component(self) -> pynecone.Component:
-        def key_result_input(key_result: str, index: int):
+        def key_result_input(key_result: str, order: int):
             return pynecone.form_control(
-                pynecone.form_label(f"Key Result {index}"),
+                pynecone.form_label(f"Key Result {order}"),
                 pynecone.text_area(
                     default_value=key_result,
-                    on_blur=getattr(
-                        WelcomeKeyResultsState, f"set_key_result_{index+1}"
-                    ),
+                    on_blur=getattr(WelcomeKeyResultsState, f"set_key_result_{order}"),
                 ),
                 width="100%",
             )
@@ -74,11 +76,30 @@ class WelcomeKeyResults(BasePage):
                         ),
                         pynecone.text("위 목표에 대해 Key-Result 들을 생각해봤어요."),
                         pynecone.spacer(),
-                        *(
-                            [
-                                key_result_input(key_result=key_result, index=0)
-                                for key_result in WelcomeKeyResultsState.key_results
-                            ]
+                        pynecone.cond(
+                            WelcomeKeyResultsState.kr1,
+                            key_result_input(WelcomeKeyResultsState.kr1, 1),
+                            pynecone.box(),
+                        ),
+                        pynecone.cond(
+                            WelcomeKeyResultsState.kr2,
+                            key_result_input(WelcomeKeyResultsState.kr2, 2),
+                            pynecone.box(),
+                        ),
+                        pynecone.cond(
+                            WelcomeKeyResultsState.kr3,
+                            key_result_input(WelcomeKeyResultsState.kr3, 3),
+                            pynecone.box(),
+                        ),
+                        pynecone.cond(
+                            WelcomeKeyResultsState.kr4,
+                            key_result_input(WelcomeKeyResultsState.kr4, 4),
+                            pynecone.box(),
+                        ),
+                        pynecone.cond(
+                            WelcomeKeyResultsState.kr5,
+                            key_result_input(WelcomeKeyResultsState.kr5, 5),
+                            pynecone.box(),
                         ),
                         *([pynecone.spacer()] * 3),
                         pynecone.text("어때요? 제시된 Key-Result 들이 마음에 드시나요?"),
@@ -116,10 +137,12 @@ class WelcomeKeyResults(BasePage):
                 "목표 다시 설정", width="100%", on_click=WelcomeKeyResultsState.prev
             ),
             cta_right=pynecone.cond(
-                WelcomeKeyResultsState.has_key_results
-                and not WelcomeKeyResultsState.error_message,
+                WelcomeKeyResultsState.has_key_results,
                 pynecone.button(
-                    "저장", width="100%", on_click=WelcomeKeyResultsState.next
+                    "저장",
+                    width="100%",
+                    on_click=WelcomeKeyResultsState.next,
+                    disabled=WelcomeKeyResultsState.error_message,
                 ),
                 pynecone.box(),
             ),

@@ -48,13 +48,6 @@ class OKRState(Global.State):
             )
         )
 
-    def set_key_results(self, key_results: list[str]):
-        if len(key_results) > 5:
-            raise TooManyKeyResultsError
-
-        for idx, key_result in enumerate(key_results):
-            setattr(self, f"kr{(idx + 1)}", key_result)
-
     def clear_key_results(self):
         [
             self.kr1,
