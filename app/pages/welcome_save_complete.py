@@ -3,6 +3,7 @@ import typing
 import pynecone
 
 from app.components.container import Container
+from app.models.okr import Objective, KeyResult
 from app.pages.base import BasePage
 from app.states.okr import OKRState
 
@@ -14,6 +15,24 @@ class WelcomeSaveCompleteState(OKRState):
 
         if not self.key_results:
             self.error_message = "KR 이 입력되지 않았어요. 이전으로 돌아가서 다시 목표부터 입력해주세요!"
+
+        with pynecone.session() as session:
+            objective = Objective(
+                value=self.objective,
+                order_idx=0,
+            )
+            session.add(objective)
+            session.flush()
+            session.refresh()
+            for idx, key_result in enumerate(self.key_results):
+                session.add(
+                    KeyResult(
+                        objective_id=objective.id,
+                        value=key_result,
+                        order_idx=idx,
+                    )
+                )
+            session.commit()
 
     def go_to_set_objective(self):
         from app.pages.welcome_objective import WelcomeObjective
@@ -54,7 +73,9 @@ class WelcomeSaveComplete(BasePage):
                     pynecone.vstack(
                         pynecone.text("OKR 을 저장했어요!"),
                         *([pynecone.spacer()] * 3),
-                        pynecone.heading('"' + WelcomeSaveCompleteState.objective + '"', size="md"),
+                        pynecone.heading(
+                            '"' + WelcomeSaveCompleteState.objective + '"', size="md"
+                        ),
                         pynecone.divider(border_color="black"),
                         pynecone.cond(
                             WelcomeSaveCompleteState.kr1,
@@ -82,7 +103,9 @@ class WelcomeSaveComplete(BasePage):
                             pynecone.box(),
                         ),
                         *([pynecone.spacer()] * 3),
-                        pynecone.text("이제 저장한 OKR 을 언제든 재방문하고, 얼마나 진행되고 있는지 체크하면서 차근차근 목표를 향해 달려봐요!"),
+                        pynecone.text(
+                            "이제 저장한 OKR 을 언제든 재방문하고, 얼마나 진행되고 있는지 체크하면서 차근차근 목표를 향해 달려봐요!"
+                        ),
                         align_items="flex-start",
                         width="100%",
                     ),
@@ -95,7 +118,9 @@ class WelcomeSaveComplete(BasePage):
             cta_left=pynecone.cond(
                 WelcomeSaveCompleteState.error_message,
                 pynecone.button(
-                    "목표 다시 설정", width="100%", on_click=WelcomeSaveCompleteState.go_to_set_objective
+                    "목표 다시 설정",
+                    width="100%",
+                    on_click=WelcomeSaveCompleteState.go_to_set_objective,
                 ),
                 pynecone.button(
                     "시작하기", width="100%", on_click=WelcomeSaveCompleteState.go_home
