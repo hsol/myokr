@@ -12,7 +12,7 @@ from app import Global
 from app.components.container import Container
 from app.okr_gpt import KeyResultProvideFailedError
 from app.pages.base import BasePage
-from app.states.okr import OKRState, KeyResult
+from app.states.okr import OKRState
 
 
 class WelcomeKeyResultsState(OKRState):
@@ -25,10 +25,7 @@ class WelcomeKeyResultsState(OKRState):
                 self.error_message = str(e)
                 return
 
-            self.key_results = [
-                KeyResult(index=idx, value=key_result)
-                for idx, key_result in enumerate(key_result_strings)
-            ]
+            self.set_key_results(key_result_strings)
         else:
             self.error_message = "목표가 설정되지 않았어요. 이전으로 돌아가서 다시 목표를 입력해주세요!"
 
@@ -55,10 +52,15 @@ class WelcomeKeyResults(BasePage):
         return WelcomeKeyResultsState.on_load
 
     def get_component(self) -> pynecone.Component:
-        def key_result_input(key_result: KeyResult, index: BaseVar):
+        def key_result_input(key_result: str, index: int):
             return pynecone.form_control(
-                pynecone.form_label("Key Result " + (index + 1)),
-                pynecone.text_area(default_value=key_result.value),
+                pynecone.form_label(f"Key Result {index}"),
+                pynecone.text_area(
+                    default_value=key_result,
+                    on_blur=getattr(
+                        WelcomeKeyResultsState, f"set_key_result_{index+1}"
+                    ),
+                ),
                 width="100%",
             )
 
@@ -72,9 +74,11 @@ class WelcomeKeyResults(BasePage):
                         ),
                         pynecone.text("위 목표에 대해 Key-Result 들을 생각해봤어요."),
                         pynecone.spacer(),
-                        pynecone.foreach(
-                            WelcomeKeyResultsState.key_results,
-                            key_result_input,
+                        *(
+                            [
+                                key_result_input(key_result=key_result, index=0)
+                                for key_result in WelcomeKeyResultsState.key_results
+                            ]
                         ),
                         *([pynecone.spacer()] * 3),
                         pynecone.text("어때요? 제시된 Key-Result 들이 마음에 드시나요?"),
