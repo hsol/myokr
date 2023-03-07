@@ -19,6 +19,8 @@ class WelcomeKeyResultsState(OKRState):
                 key_result_strings = Global.GPT.get_key_results(self.objective)
             except KeyResultProvideFailedError as e:
                 self.error_message = str(e)
+                for idx in range(5):
+                    setattr(self, f"kr{(idx + 1)}", None)
                 return
 
             for idx, key_result in enumerate(key_result_strings[:5]):

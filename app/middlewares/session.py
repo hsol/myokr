@@ -18,7 +18,8 @@ class SessionMiddleware(pynecone.Middleware):
                 if (
                     token_user_log := s.query(AuthUserAccessLog)
                     .filter(AuthUserAccessLog.token.__eq__(state.session.token))
-                    .one_or_none()
+                    .order_by(AuthUserAccessLog.reg_datetime.desc())
+                    .first()
                 ):
                     state.session.user_id = token_user_log.user_id
 
