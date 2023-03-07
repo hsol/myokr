@@ -36,8 +36,12 @@ class WelcomeKeyResultsState(OKRState):
 
     def next(self):
         from app.pages.welcome_save_complete import WelcomeSaveComplete
+        from app.pages.welcome_need_login import WelcomeNeedLogin
 
-        return pynecone.redirect(WelcomeSaveComplete.route)
+        if self.session.user:
+            return pynecone.redirect(WelcomeSaveComplete.route)
+
+        return pynecone.redirect(WelcomeNeedLogin.route)
 
 
 class WelcomeKeyResults(BasePage):

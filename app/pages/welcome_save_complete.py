@@ -12,27 +12,34 @@ class WelcomeSaveCompleteState(OKRState):
     def on_load(self):
         if not self.objective:
             self.error_message = "목표가 설정되지 않았어요. 이전으로 돌아가서 다시 목표를 입력해주세요!"
+            return
 
         if not self.key_results:
             self.error_message = "KR 이 입력되지 않았어요. 이전으로 돌아가서 다시 목표부터 입력해주세요!"
+            return
 
-        with pynecone.session() as session:
+        if not self.session.user:
+            self.error_message = "먼저 로그인을 해주세요."
+            return
+
+        with pynecone.session() as s:
             objective = Objective(
+                user_id=self.session.user.id,
                 value=self.objective,
                 order_idx=0,
             )
-            session.add(objective)
-            session.flush()
-            session.refresh()
+            s.add(objective)
+            s.flush()
+            s.refresh(objective)
             for idx, key_result in enumerate(self.key_results):
-                session.add(
+                s.add(
                     KeyResult(
                         objective_id=objective.id,
                         value=key_result,
                         order_idx=idx,
                     )
                 )
-            session.commit()
+            s.commit()
 
     def go_to_set_objective(self):
         from app.pages.welcome_objective import WelcomeObjective

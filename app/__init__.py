@@ -1,12 +1,42 @@
 import pynecone
 
+from app.models.auth import AuthUser
 from app.okr_gpt import OKRChatGPT
+
+
+class Session(pynecone.Base):
+    user_id: int | None
+    token: str
+
+    ip: str
+    storage: dict = {}
+
+    @pynecone.var
+    def user(self):
+        if self.user_id is None:
+            return None
+
+        with pynecone.session() as s:
+            return (
+                s.query(AuthUser).filter(AuthUser.id.__eq__(self.user_id)).one_or_none()
+            )
 
 
 class Global:
     class State(pynecone.State):
-        def on_load(self):
-            print("why")
+        session: Session | None
+
+        def get_session_user(self, email: str):
+            with pynecone.session() as s:
+                session_user = (
+                    s.query(AuthUser).filter(AuthUser.email.__eq__(email)).one_or_none()
+                )
+                if session_user is None:
+                    session_user = AuthUser(email=email)
+                    s.add(session_user)
+                s.commit()
+
+            return session_user
 
     class FontFamily:
         DEFAULT = "'Noto Sans KR', sans-serif;"

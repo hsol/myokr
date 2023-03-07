@@ -4,6 +4,7 @@ import pkgutil
 
 import pynecone
 from app import Global
+from app.middlewares.session import SessionMiddleware
 from app.pages.base import BasePage
 from app import pages
 
@@ -11,6 +12,7 @@ app = pynecone.App(
     state=Global.State,
     stylesheets=Global.STYLE_SHEETS,
     style=Global.STYLE,
+    middleware=[SessionMiddleware()],
 )
 
 
