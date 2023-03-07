@@ -1,18 +1,14 @@
-import inspect
-import json
 import typing
-from functools import partial
 
 import pynecone
-from pynecone.event import EventHandler, EventChain
+from pynecone.event import EventChain
 from pynecone.utils import call_event_fn
-from pynecone.var import BaseVar
 
 from app import Global
 from app.components.container import Container
 from app.okr_gpt import KeyResultProvideFailedError
 from app.pages.base import BasePage
-from app.states.okr import OKRState, TooManyKeyResultsError
+from app.states.okr import OKRState
 
 
 class WelcomeKeyResultsState(OKRState):
@@ -39,14 +35,9 @@ class WelcomeKeyResultsState(OKRState):
         return pynecone.redirect(WelcomeObjective.route)
 
     def next(self):
-        from app.pages.welcome import Welcome
+        from app.pages.welcome_save_complete import WelcomeSaveComplete
 
-        return pynecone.redirect(Welcome.route)
-
-    def partial_set_key_results(self, index):
-        events = call_event_fn(self.set_key_result, index)
-        # Return the event chain.
-        return EventChain(events=events)
+        return pynecone.redirect(WelcomeSaveComplete.route)
 
 
 class WelcomeKeyResults(BasePage):
