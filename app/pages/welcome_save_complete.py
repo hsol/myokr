@@ -12,6 +12,9 @@ class WelcomeSaveCompleteState(OKRState):
         if not self.objective:
             self.error_message = "목표가 설정되지 않았어요. 이전으로 돌아가서 다시 목표를 입력해주세요!"
 
+        if not self.key_results:
+            self.error_message = "KR 이 입력되지 않았어요. 이전으로 돌아가서 다시 목표부터 입력해주세요!"
+
     def go_to_set_objective(self):
         from app.pages.welcome_objective import WelcomeObjective
 

@@ -17,6 +17,8 @@ class OKRState(Global.State):
     kr3: str | None = None
     kr4: str | None = None
     kr5: str | None = None
+    def set_objective(self, v: str):
+        self.objective = v
 
     def set_key_result_1(self, v: str):
         self.kr1 = v

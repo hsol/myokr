@@ -55,6 +55,7 @@ class WelcomeKeyResults(BasePage):
                     on_blur=getattr(WelcomeKeyResultsState, f"set_key_result_{order}"),
                 ),
                 width="100%",
+                is_required=True,
             )
 
         return Container.with_cta(
@@ -62,26 +63,17 @@ class WelcomeKeyResults(BasePage):
                 pynecone.cond(
                     WelcomeKeyResultsState.has_key_results,
                     pynecone.vstack(
-                        pynecone.code_block(
-                            "목표: " + WelcomeKeyResultsState.objective,
+                        pynecone.text("멋진 목표네요!"),
+                        pynecone.text_area(
+                            default_value=WelcomeKeyResultsState.objective,
+                            on_blur=WelcomeKeyResultsState.set_objective,
+                            wrap="off",
                         ),
-                        pynecone.text("위 목표에 대해 Key-Result 들을 생각해봤어요."),
-                        pynecone.spacer(),
-                        pynecone.cond(
-                            WelcomeKeyResultsState.kr1,
-                            key_result_input(WelcomeKeyResultsState.kr1, 1),
-                            pynecone.box(),
-                        ),
-                        pynecone.cond(
-                            WelcomeKeyResultsState.kr2,
-                            key_result_input(WelcomeKeyResultsState.kr2, 2),
-                            pynecone.box(),
-                        ),
-                        pynecone.cond(
-                            WelcomeKeyResultsState.kr3,
-                            key_result_input(WelcomeKeyResultsState.kr3, 3),
-                            pynecone.box(),
-                        ),
+                        pynecone.text("이 목표에 대해 Key-Result 들을 생각해봤어요."),
+                        *([pynecone.spacer()] * 3),
+                        key_result_input(WelcomeKeyResultsState.kr1, 1),
+                        key_result_input(WelcomeKeyResultsState.kr2, 2),
+                        key_result_input(WelcomeKeyResultsState.kr3, 3),
                         pynecone.cond(
                             WelcomeKeyResultsState.kr4,
                             key_result_input(WelcomeKeyResultsState.kr4, 4),
@@ -113,7 +105,7 @@ class WelcomeKeyResults(BasePage):
                         ),
                         pynecone.vstack(
                             pynecone.circular_progress(is_indeterminate=True),
-                            pynecone.text("멋진 아이디어를 생각해내는 중이에요."),
+                            pynecone.text("Key Result 를 고민하는 중이에요."),
                             width="100%",
                             align_items="center",
                         ),
