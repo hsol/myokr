@@ -149,3 +149,8 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
+
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 하루
+SESSION_SAVE_EVERY_REQUEST = True
+
+AUTH_USER_MODEL = "auth_extended.ExtendedUser"
