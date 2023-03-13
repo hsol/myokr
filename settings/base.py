@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import importlib
+import inspect
 
+from django.apps import AppConfig
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,6 +45,24 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+APPS_DIR = f"{BASE_DIR}/apps"
+for app_name in os.listdir(APPS_DIR):
+    if not os.path.isdir(os.path.join(APPS_DIR, app_name)):
+        continue
+
+    module_import_path = f"apps.{app_name}"
+    try:
+        module = importlib.import_module(f"{module_import_path}.apps")
+        for config_cls_name, cls in inspect.getmembers(
+            module,
+            lambda obj: (
+                inspect.isclass(obj) and obj != AppConfig and issubclass(obj, AppConfig)
+            ),
+        ):
+            INSTALLED_APPS.append(f"{cls.name}.apps.{config_cls_name}")
+    except ModuleNotFoundError:
+        pass
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -108,7 +129,7 @@ USE_L10N = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -119,12 +140,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USERNAME"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USERNAME"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
