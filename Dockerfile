@@ -8,6 +8,6 @@ RUN poetry config virtualenvs.create false && poetry install
 
 RUN pc init
 
-EXPOSE 80
+EXPOSE 3000
 EXPOSE 8000
 ENTRYPOINT ["pc", "run", "--env", "prod", "--port", "80"]
