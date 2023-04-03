@@ -6,8 +6,6 @@ RUN git clone -b pynecone --single-branch https://ghp_YnKUhDwaJeUGirR0X91XiBirLC
 RUN pip install --upgrade pip && pip install poetry
 RUN poetry config virtualenvs.create false && poetry install
 
-RUN pc init
-
 EXPOSE 80
 EXPOSE 8000
 ENTRYPOINT ["pc", "run", "--env", "prod", "--port", "80"]
