@@ -10,4 +10,4 @@ RUN pc init
 
 EXPOSE 3000
 EXPOSE 8000
-ENTRYPOINT ["pc", "run", "--env", "prod", "--port", "80"]
+ENTRYPOINT ["pc", "run", "--env", "prod"]
