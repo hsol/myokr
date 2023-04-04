@@ -1,6 +1,4 @@
-import importlib
-import inspect
-import pkgutil
+import os
 
 import pynecone
 from app import Global
@@ -13,6 +11,7 @@ app = pynecone.App(
     stylesheets=Global.STYLE_SHEETS,
     style=Global.STYLE,
     middleware=[SessionMiddleware()],
+    api_url=os.environ.get("API_URL"),
 )
 
 
