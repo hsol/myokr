@@ -23,4 +23,5 @@ config = pc.Config(
     deploy_url="https://my-o.kr",
     db_url=get_mysql_db_url(),
     env=os.environ.get("APP_ENVIRONMENT") or pc.Env.DEV,
+    api_url=os.environ.get("API_URL") or pc.constants.API_URL,
 )

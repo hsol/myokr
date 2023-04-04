@@ -11,7 +11,6 @@ app = pynecone.App(
     stylesheets=Global.STYLE_SHEETS,
     style=Global.STYLE,
     middleware=[SessionMiddleware()],
-    api_url=os.environ.get("API_URL"),
 )
 
 
